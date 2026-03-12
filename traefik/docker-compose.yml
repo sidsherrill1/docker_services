@@ -1,0 +1,23 @@
+# docker-compose.yml
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    ports:
+      - "80:80"                                     # exposes for web traffic
+      - "443:443"                                     # exposes for web traffic
+      - "8080:8080"                                 # exposes for dashboard
+    environment:
+      - TZ=America/Chicago
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./data/certs/:/var/traefik/certs:rw
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
+  

@@ -1,0 +1,17 @@
+---
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nginx.rule=Host(`nginx.sherrill-burt.com`)
+      - traefik.http.routers.nginx.entrypoints=websecure
+      - traefik.http.routers.nginx.tls=true
+      - traefik.http.routers.nginx.tls.certresolver=cloudflare
+    restart: always
+networks:
+  traefik:
+    external: true

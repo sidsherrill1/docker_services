@@ -1,0 +1,42 @@
+services:
+    kopia:
+        image: kopia/kopia:latest
+        hostname: kopia
+        container_name: Kopia
+        restart: unless-stopped
+        #ports:
+        #    - 51515:51515
+        ## Setup the server that provides the web gui
+        command:
+            - server
+            - start
+            - --disable-csrf-token-checks
+            - --insecure
+            - --address=0.0.0.0:51515
+            - --server-username=${KOPIA_USERNAME}
+            - --server-password=${KOPIA_PASSWORD}
+        environment:
+            # Set repository password
+            KOPIA_PASSWORD: ${REPO_PASSWORD}
+            USER: ${REPO_USERNAME}
+        volumes:
+            # Mount local folders needed by kopia
+            - ./kopia/config:/app/config
+            - ./kopia/cache:/app/cache
+            - ./kopia/logs:/app/logs
+            # Mount repository location
+            - ~/kopia_backups:/repository
+            # Mount path for browsing mounted snapshots
+            - /Volumes/DISK00:/source:ro
+        networks:
+          - traefik
+        labels:
+          - traefik.enable=true
+          - traefik.http.routers.kopia.rule=Host(`kopia.sherrill-burt.com`)
+          - traefik.http.routers.kopia.entrypoints=websecure
+          - traefik.http.routers.kopia.tls=true
+          - traefik.http.routers.kopia.tls.certresolver=cloudflare
+          - traefik.http.services.kopia.loadbalancer.server.port=51515
+networks:
+  traefik:
+    external: true
