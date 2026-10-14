@@ -3,9 +3,9 @@ services:
   nginx:
     container_name: nginx
     image: nginx:latest
+    restart: always
     networks:
       - traefik
-    restart: always
     labels:
       - traefik.enable=true
       - traefik.http.routers.nginx.rule=Host(`nginx.sherrill-burt.com`)

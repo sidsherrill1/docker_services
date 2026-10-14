@@ -1,0 +1,14 @@
+http:
+  routers:
+    unifi:
+      rule: "Host(`unifi.sherrill-burt.com`)"
+      entryPoints:
+        - websecure
+      service: unifi
+      tls:
+        certResolver: cloudflare
+  services:
+    unifi:
+      loadBalancer:
+        servers:
+          - url: "http://10.5.0.1"

@@ -1,0 +1,14 @@
+http:
+  routers:
+    homeassistant:
+      rule: "Host(`ha.sherrill-burt.com`)"
+      entryPoints:
+        - websecure
+      service: homeassistant
+      tls:
+        certResolver: cloudflare
+  services:
+    homeassistant:
+      loadBalancer:
+        servers:
+          - url: "http://10.5.1.142"
