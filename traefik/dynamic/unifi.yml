@@ -1,7 +1,7 @@
 http:
   routers:
     unifi:
-      rule: "Host(`unifi.sherrill-burt.com`)"
+      rule: "Host(`unifi.sherrill-burt.com`) || Host(`ui.sherrill-burt.com`)"
       entryPoints:
         - websecure
       service: unifi
@@ -10,5 +10,9 @@ http:
   services:
     unifi:
       loadBalancer:
+        serversTransport: unifi-selfsigned
         servers:
-          - url: "http://10.5.0.1"
+          - url: "https://10.5.0.1:443"
+  serversTransports:
+    unifi-selfsigned:
+      insecureSkipVerify: true
